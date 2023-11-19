@@ -50,7 +50,6 @@ do
   fi
   printf -- " %s\n" "${image}" 
 done
-exit 0
 
 mkdir -p .ci/log
 LOG=".ci/log/build-${VERSION}-${FLAVOUR}.txt"
