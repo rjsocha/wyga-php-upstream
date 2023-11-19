@@ -8,12 +8,12 @@ Images are build once per week with newest GA version of PHP for each supported 
 
 CLI:
 ```
-docker run --rm --pull always -it registry.gitlab.arbolt.com/the-platform/container-images/php-upstream:8.2-fpm-alpine
+docker run --rm --pull always -it wyga/php-upstream:8.2-fpm-alpine
 ```
 
 Dockerfile
 ```
-FROM registry.gitlab.arbolt.com/the-platform/container-images/php-upstream:8.2-fpm-alpine
+FROM wyga/php-upstream:8.2-fpm-alpine
 RUN install-php-extensions pgsql && \
     docker-php-ext-enable-xdebug
 ```
