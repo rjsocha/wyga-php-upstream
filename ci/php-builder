@@ -38,7 +38,7 @@ IMAGE+=( "-t" "${CI_REGISTRY_IMAGE}:${VERSION}-${FLAVOUR}" )
 if [[ -n ${DOCKER_IO_USER:-} ]]
 then
   IMAGE+=( "-t" "${DOCKER_IO_USER}/:${VERSION}-${FLAVOUR}" )
-  IMAGE+=( "-t" "${DOKCER_IO_USER}/:${VERSION}-${FLAVOUR}" )
+  IMAGE+=( "-t" "${DOCKER_IO_USER}/:${VERSION}-${FLAVOUR}" )
 fi
 
 printf -- "Building:\n"
