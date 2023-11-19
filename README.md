@@ -20,7 +20,6 @@ RUN install-php-extensions pgsql && \
 
 ## Registries
 
- - registry.socha.it
  - docker.io
 
 ## Suported PHP versions
