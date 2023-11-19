@@ -1,0 +1,28 @@
+default:
+  tags:
+    - shell
+
+stages:
+  - builder
+
+PHP Upstream Builder:
+  stage: builder
+  variables:
+    GIT_DEPTH: 1
+  before_script:
+    - ci/setup-environment
+    - export PATH=$PWD/ci:$PWD:${PATH}
+  script:
+    - ci-builder
+  after_script:
+    - ci/cleanup-environment
+  artifacts:
+    name: "build-php-upstream"
+    paths:
+      - .ci/log
+    expire_in: 1 week
+    when: always
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+    - if: $CI_PIPELINE_SOURCE == "web"
+  retry: 2

@@ -1,0 +1,32 @@
+#!/bin/bash
+set -eu
+source "config.ci"
+
+printf -- "PLATFORMS: %s\n" "${PLATFORMS}"
+printf -- "BUILDS:\n"
+for version in ${PHP_UPSTREAM}
+do
+  printf -- "  %s\n" "${version}"
+done
+
+for version in ${PHP_UPSTREAM}
+do
+  if pv=$(ci/get-php-version "${version}")
+  then
+    if [[ ${pv} =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
+    then
+      major="${pv%.*}"
+      minor="${pv##*.}"
+      flavor="${version#*-}"
+      shadow-text 0 "${flavor}"
+      shadow-text 6 "${pv}"
+      php-builder "${version}" "${flavor}" "${pv}" "${major}" "${minor}"
+    else
+      printf -- "ERROR: unable parse upstream PHP version ...\n"
+      exit 100
+    fi
+  else
+    printf -- "ERROR: unable to get upstream PHP version ...\n"
+    exit 200
+  fi
+done

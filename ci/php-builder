@@ -1,0 +1,53 @@
+#!/bin/bash
+set -eu
+source "config.ci"
+
+UPSTREAM="${1}"
+FLAVOUR="${2}"
+VERSION="${3}"
+MAJOR_VERSION="${4}"
+MINOR_VERSION="${5}"
+
+RELEASE=${MAJOR_VERSION}-${FLAVOUR}
+DOCKERFILE="dockerfile/Dockerfile.${MAJOR_VERSION}-${FLAVOUR}"
+
+echo "UPSTREAM:   ${UPSTREAM}"
+echo "FLAVOUR:    ${FLAVOUR}"
+echo "VERSION:    ${VERSION}"
+echo "MAJOR:      ${MAJOR_VERSION}"
+echo "MINOR:      ${MINOR_VERSION}"
+echo "DOCKERFILE: ${DOCKERFILE}"
+echo "PLATFORMS:  ${PLATFORMS}"
+
+if ! [[ -s ${DOCKERFILE} ]]
+then
+  printf -- "ERROR: missing Dockerfile: %s ...\n" "${DOCKERFILE}"
+  exit 100
+fi
+
+if [[ -z ${CI_REGISTRY_IMAGE:-} ]]
+then
+  printf -- "ERROR: missing CI variable: %s ..\n" "CI_REGISTRY_IMAGE"
+  exit 205
+fi
+
+IMAGE=()
+IMAGE+=( "-t" "${CI_REGISTRY_IMAGE}:${UPSTREAM}" )
+IMAGE+=( "-t" "${CI_REGISTRY_IMAGE}:${VERSION}-${FLAVOUR}" )
+
+printf -- "Building:\n"
+for image in ${IMAGE[@]} 
+do
+  if [[ ${image} =~ ^- ]]
+  then
+    continue
+  fi
+  printf -- " %s\n" "${image}" 
+done
+
+exit 0
+
+mkdir -p .ci/log
+LOG=".ci/log/build-${VERSION}-${FLAVOUR}.txt"
+export UPSTREAM
+exec docker buildx build ${BUILDX_CONFIG[@]} ${IMAGE[@]} --pull --no-cache --build-arg UPSTREAM  -f "${DOCKERFILE}" context >"${LOG}" 2>&1

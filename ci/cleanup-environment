@@ -1,0 +1,12 @@
+#!/bin/bash
+set -eu
+source "config.ci"
+if [[ -n ${SKIP_CLEANUP:-} ]]
+then
+  exit 0
+fi
+ci/ascii-text 01:02:03:04:05:06 "CLEANUP"
+docker system prune --filter=until=72h --force
+docker buildx prune --all --filter=until=72h --force --verbose
+exit 0
+
