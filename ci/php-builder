@@ -37,7 +37,7 @@ IMAGE+=( "-t" "${CI_REGISTRY_IMAGE}:${VERSION}-${FLAVOUR}" )
 
 if [[ -n ${DOCKER_IO_USER:-} ]]
 then
-  IMAGE+=( "-t" "${CI_PROJECT_PATH}:${VERSION}-${FLAVOUR}" )
+  IMAGE+=( "-t" "${CI_PROJECT_PATH}:${UPSTREAM}"
   IMAGE+=( "-t" "${CI_PROJECT_PATH}:${VERSION}-${FLAVOUR}" )
 fi
 
