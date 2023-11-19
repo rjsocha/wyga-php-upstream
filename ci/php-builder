@@ -37,8 +37,8 @@ IMAGE+=( "-t" "${CI_REGISTRY_IMAGE}:${VERSION}-${FLAVOUR}" )
 
 if [[ -n ${DOCKER_IO_USER:-} ]]
 then
-  IMAGE+=( "-t" "${DOCKER_IO_USER}/:${VERSION}-${FLAVOUR}" )
-  IMAGE+=( "-t" "${DOCKER_IO_USER}/:${VERSION}-${FLAVOUR}" )
+  IMAGE+=( "-t" "${CI_PROJECT_PATH}:${VERSION}-${FLAVOUR}" )
+  IMAGE+=( "-t" "${CI_PROJECT_PATH}:${VERSION}-${FLAVOUR}" )
 fi
 
 printf -- "Building:\n"
@@ -50,7 +50,6 @@ do
   fi
   printf -- " %s\n" "${image}" 
 done
-env
 exit 0
 
 mkdir -p .ci/log
