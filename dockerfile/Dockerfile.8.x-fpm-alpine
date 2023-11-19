@@ -4,7 +4,7 @@ ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/do
 RUN apk upgrade --no-cache && \
     apk add --no-cache tini && \
     chmod +x /usr/local/bin/install-php-extensions && \
-    IPE_DONT_ENABLE=1 IPE_GD_WITHOUTAVIF=1 install-php-extensions \
+    IPE_DONT_ENABLE=1 install-php-extensions \
       bcmath \
       bz2 \
       calendar \
@@ -12,16 +12,24 @@ RUN apk upgrade --no-cache && \
       gd \
       gettext \
       gmp \
+      imap \
       intl \
+      ldap \
       mcrypt \
       memcache \
       memcached \
       mongodb  \
       mysqli \
+      pcntl \
       opcache \
       pdo_mysql \
+      pdo_pgsql	\
+      pgsql \
       redis \
+      sockets \
       xdebug \
       yaml \
       xsl \
-      zip
+      zip && \
+    find /usr/local/etc/php/conf.d -type f -name "*.ini" -not -name "docker-fpm.ini" -not -name "docker-php-ext-sodium.ini" -exec mv {} {}-disabled \;
+COPY --chmod=0755 enable-php-extensions /usr/local/bin/enable-php-extensions

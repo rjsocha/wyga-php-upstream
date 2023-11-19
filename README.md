@@ -14,8 +14,7 @@ docker run --rm --pull always -it wyga/php-upstream:8.2-fpm-alpine
 Dockerfile
 ```
 FROM wyga/php-upstream:8.2-fpm-alpine
-RUN install-php-extensions pgsql && \
-    docker-php-ext-enable-xdebug
+RUN enable-php-extensions xdebug opcache mysqli gd
 ```
 
 ## Registries
@@ -34,71 +33,31 @@ RUN install-php-extensions pgsql && \
 
 ## Included PHP modules
 
-### Enabled
-
   - bcmath
   - bz2
   - calendar
-  - ctype
-  - curl
-  - date
-  - dom
   - exif
-  - fileinfo
-  - filter
-  - ftp
   - gd
   - gettext
   - gmp
-  - hash
-  - iconv
+  - imap
   - intl
-  - json
-  - libxml
-  - mbstring
-  - mysqli
-  - mysqlnd
-  - openssl
-  - pcre
-  - pdo_mysql
-  - pdo_sqlite
-  - posix
-  - random
-  - readline
-  - session
-  - SimpleXML
-  - sodium
-  - SPL
-  - sqlite3
-  - tokenizer
-  - xml
-  - xmlreader
-  - xmlwriter
-  - OPcache
-  - zip
-  - zlib
-
-### Availible
-
+  - ldap
   - mcrypt
   - memcache
   - memcached
   - mongodb
+  - mysqli
+  - opcache
+  - pcntl
+  - pdo_mysql
+  - pgsql
   - redis
+  - sockets
   - xdebug
+  - xsl
   - yaml
-
-Can be enabled via this commands:
-
-```
-docker-php-ext-enable-mcrypt
-docker-php-ext-enable-memcached 
-docker-php-ext-enable-memcache
-docker-php-ext-enable-mongodb 
-docker-php-ext-enable-redis
-docker-php-ext-enable-xdebug 
-docker-php-ext-enable-yaml
-```
+  - zip
 
 ### Additional exensions
 

@@ -1,0 +1,21 @@
+#!/bin/sh
+for ext in $@
+do
+  base="docker-php-ext"
+  if [ "${ext}" = "memcached" ]
+  then
+    base="xx-php-ext"
+  fi
+  if test -f "/usr/local/etc/php/conf.d/${base}-${ext}.ini-disabled"
+  then
+    echo "Enabling extension ${ext}"
+    mv "/usr/local/etc/php/conf.d/${base}-${ext}.ini-disabled" "/usr/local/etc/php/conf.d/${base}-${ext}.ini"
+  else
+    if test -f "/usr/local/etc/php/conf.d/${base}-${ext}.ini"
+    then
+      echo "The extension ${ext} has already been enabled"
+    else
+      echo "No extension ${ext} has been found"
+    fi
+  fi
+done
