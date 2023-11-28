@@ -35,7 +35,7 @@ IMAGE=()
 IMAGE+=( "-t" "${CI_REGISTRY_IMAGE}:${UPSTREAM}" )
 IMAGE+=( "-t" "${CI_REGISTRY_IMAGE}:${VERSION}-${FLAVOUR}" )
 
-if [[ -n ${DOCKER_IO_USER:-} ]]
+if [[ -n ${DOCKER_IO_USER:-} ]] && [[ -z ${NODOCKERIO:-} ]]
 then
   IMAGE+=( "-t" "${CI_PROJECT_PATH}:${UPSTREAM}" )
   IMAGE+=( "-t" "${CI_PROJECT_PATH}:${VERSION}-${FLAVOUR}" )
