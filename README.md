@@ -8,12 +8,12 @@ Images are build once per week with newest GA version of PHP for each supported 
 
 CLI:
 ```
-docker run --rm --pull always -it wyga/php-upstream:8.2-fpm-alpine
+docker run --rm --pull always -it wyga/php-upstream:8.3-fpm-alpine
 ```
 
 Dockerfile
 ```
-FROM wyga/php-upstream:8.2-fpm-alpine
+FROM wyga/php-upstream:8.3-fpm-alpine
 RUN enable-php-extensions xdebug opcache mysqli gd
 ```
 
@@ -23,9 +23,9 @@ RUN enable-php-extensions xdebug opcache mysqli gd
 
 ## Suported PHP versions
 
-  - 8.0.x
   - 8.1.x
   - 8.2.x
+  - 8.3.x
 
 ## Supported image flavors
 
@@ -43,7 +43,7 @@ RUN enable-php-extensions xdebug opcache mysqli gd
   - imap
   - intl
   - ldap
-  - mcrypt
+  - mcrypt (for <=8.2)
   - memcache
   - memcached
   - mongodb
@@ -52,6 +52,7 @@ RUN enable-php-extensions xdebug opcache mysqli gd
   - pcntl
   - pdo_mysql
   - pgsql
+  - random (>=8.3)
   - redis
   - sockets
   - xdebug

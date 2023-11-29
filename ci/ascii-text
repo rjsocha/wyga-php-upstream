@@ -604,7 +604,7 @@ local r c s
 tokenize() {
 local _char _text _token
   _text="${1:-}"
-  for ((i=0; i<${#_text}; i++)) 
+  for ((i=0; i<${#_text}; i++))
   do
     _char="${_text:${i}:1}"
     _char="${_char^^}"

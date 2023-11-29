@@ -4,7 +4,7 @@ ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/do
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -qq && \
     apt-get dist-upgrade -qq && \
-    apt-get install -o Dpkg::Options::="--path-exclude=/usr/bin/tini-static" \ 
+    apt-get install -o Dpkg::Options::="--path-exclude=/usr/bin/tini-static" \
                     -o Dpkg::Options::="--path-exclude=/usr/share/*" \
                     -qq --no-install-recommends \
                     tini busybox && \

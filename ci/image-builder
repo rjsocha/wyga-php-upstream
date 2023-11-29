@@ -64,13 +64,13 @@ do
   TAG+=( "-t" "${CI_REGISTRY_IMAGE}:${tag}" )
   if [[ -n ${DOCKER_IO_USER:-} ]] && [[ -z ${NODOCKERIO:-} ]]
   then
-    IMAGE+=( "${CI_PROJECT_PATH}:${tag}" )
+    DOCKERIO+=( "${CI_PROJECT_PATH}:${tag}" )
     TAG+=( "-t" "${CI_PROJECT_PATH}:${tag}" )
   fi
 done
 
 printf -- "Building:\n"
-for image in ${IMAGE[@]}
+for image in ${IMAGE[@]} ${DOCKERIO[@]}
 do
   printf -- " %s\n" "${image}"
 done

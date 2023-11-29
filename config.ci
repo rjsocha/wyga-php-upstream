@@ -1,10 +1,10 @@
 export NAME="php-upstream"
 export PHP_UPSTREAM="${UPSTREAMS:-8.3-fpm-alpine 8.2-fpm-alpine 8.1-fpm-alpine}"
-export BUILD_ARGS="UPSTREAM VERSION"
 export PLATFORMS="${PLATFORMS:-linux/amd64,linux/arm64}"
-export DOCKER_BUILDER="multiplatform-builder"
 
-export PHP_UPSTREAM="8.3-fpm-alpine"
+export BUILD_ARGS="UPSTREAM VERSION"
+
+export DOCKER_BUILDER="multiplatform-builder"
 
 OUTPUT_IMAGE="type=image,push=true,compression=gzip,compression-level=9"
 OUTPUT_LOCAL="type=docker,compression=gzip,compression-level=9"
