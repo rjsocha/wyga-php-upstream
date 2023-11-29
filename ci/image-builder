@@ -1,0 +1,105 @@
+#!/bin/bash
+set -eu
+set -o pipefail
+source "config.ci"
+BASE=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+UPSTREAM="${1}"
+FLAVOUR="${2}"
+VERSION="${3}"
+MAJOR_VERSION="${4}"
+MINOR_VERSION="${5}"
+CONTEXT="context"
+CI_LOGS=".artifacts/log"
+
+RELEASE=${MAJOR_VERSION}-${FLAVOUR}
+DOCKERFILE="dockerfile/Dockerfile.${MAJOR_VERSION}-${FLAVOUR}"
+
+# Locate project root directory
+while [[ ! -f .gitlab-ci.yml ]]
+do
+  cd ..
+  if [[ $(pwd) == "/" ]]
+  then
+    printf -- "ERROR: Unable to locate the project's root folder ...\n"
+    exit 100
+  fi
+done
+if ! grep -q "#::PROJECT:CI:${NAME^^}" ".gitlab-ci.yml"
+then
+  printf -- "ERROR: Unable to locate the project's root folder (incorrect .gitlab-ci.yml file) ...\n"
+  exit 100
+fi
+export PATH="$(pwd)/ci:$(pwd):${PATH}"
+
+
+echo "UPSTREAM:   ${UPSTREAM}"
+echo "FLAVOUR:    ${FLAVOUR}"
+echo "VERSION:    ${VERSION}"
+echo "MAJOR:      ${MAJOR_VERSION}"
+echo "MINOR:      ${MINOR_VERSION}"
+echo "CONTEXT:    ${CONTEXT}"
+echo "DOCKERFILE: ${DOCKERFILE}"
+echo "PLATFORMS:  ${PLATFORMS}"
+
+if ! [[ -d ${CONTEXT} ]]
+then
+  printf -- "ERROR: missing context directory: %s ...\n" "${CONTEXT}"
+  exit 100
+fi
+
+if ! [[ -s ${DOCKERFILE} ]]
+then
+  printf -- "ERROR: missing Dockerfile: %s ...\n" "${DOCKERFILE}"
+  exit 100
+fi
+
+IMAGE=()
+DOCKERIO=()
+TAG=()
+
+for tag in ${UPSTREAM} ${VERSION}-${FLAVOUR}
+do
+  IMAGE+=( "${CI_REGISTRY_IMAGE}:${tag}" )
+  TAG+=( "-t" "${CI_REGISTRY_IMAGE}:${tag}" )
+  if [[ -n ${DOCKER_IO_USER:-} ]] && [[ -z ${NODOCKERIO:-} ]]
+  then
+    IMAGE+=( "${CI_PROJECT_PATH}:${tag}" )
+    TAG+=( "-t" "${CI_PROJECT_PATH}:${tag}" )
+  fi
+done
+
+printf -- "Building:\n"
+for image in ${IMAGE[@]}
+do
+  printf -- " %s\n" "${image}"
+done
+
+ARGS=()
+for arg in ${BUILD_ARGS:-}
+do
+  export $arg
+  ARGS+=( "--build-arg" "${arg}" )
+done
+
+exec 101>&1 102>&2
+if [[ -z ${NOLOG:-} ]]
+then
+  if ! mkdir -p "${CI_LOGS}"
+  then
+    printf -- "ERROR: Unable to create LOG directory ...\n"
+    exit 100
+  fi
+  exec >"${CI_LOGS}/build-${NAME,,}-${VERSION}-${FLAVOUR}.txt" 2>&1
+fi
+
+rc=0
+docker buildx build ${BUILDX_CONFIG[@]} ${TAG[@]} ${ARGS[@]} -f "${DOCKERFILE}" "${CONTEXT}" || rc=1
+exec 1>&101 2>&102
+if [[ ${rc} -eq 0 ]]
+then
+  shadow-text 0 "SUCCEEDED"
+else
+  shadow-text 6 "FAILED"
+  exit 10
+fi

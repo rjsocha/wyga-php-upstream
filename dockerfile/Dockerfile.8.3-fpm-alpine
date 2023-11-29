@@ -15,7 +15,6 @@ RUN apk upgrade --no-cache && \
       imap \
       intl \
       ldap \
-      mcrypt \
       memcache \
       memcached \
       mongodb  \
@@ -30,7 +29,6 @@ RUN apk upgrade --no-cache && \
       xdebug \
       yaml \
       xsl \
-      zip
-# && \
-#    find /usr/local/etc/php/conf.d -type f -name "*.ini" -not -name "docker-fpm.ini" -not -name "docker-php-ext-sodium.ini" -exec mv {} {}-disabled \;
-#COPY --chmod=0755 enable-php-extensions /usr/local/bin/enable-php-extensions
+      zip  && \
+    find /usr/local/etc/php/conf.d -type f -name "*.ini" -not -name "docker-fpm.ini" -not -name "docker-php-ext-sodium.ini" -exec mv {} {}-disabled \;
+COPY --chmod=0755 enable-php-extensions /usr/local/bin/enable-php-extensions

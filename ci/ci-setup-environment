@@ -1,0 +1,16 @@
+#!/bin/bash
+set -eu
+source "config.ci"
+if [[ -n ${CI_REGISTRY:-} ]]
+then
+  printf -- "REGISTRY: %s\n" "${CI_REGISTRY}"
+  echo "${CI_REGISTRY_PASSWORD}" | docker login -u "${CI_REGISTRY_USER}" --password-stdin "${CI_REGISTRY}" &>/dev/null
+fi
+if [[ -n ${DOCKER_IO_USER:-} ]] && [[ -n ${DOCKER_IO_TOKEN:-} ]] && [[ -z ${NODOCKERIO:-} ]]
+then
+  printf -- "REGISTRY: %s\n" "docker.io"
+  echo "${DOCKER_IO_TOKEN}" | docker login -u "${DOCKER_IO_USER}" --password-stdin &>/dev/null
+fi
+docker run --quiet --privileged --rm tonistiigi/binfmt --install all
+docker buildx inspect "${DOCKER_BUILDER}" --bootstrap &>/dev/null || docker buildx create --use --bootstrap --name "${DOCKER_BUILDER}"
+mkdir -p .artifacts/log

@@ -1,8 +1,11 @@
 #!/bin/bash
 set -eu
+set -o pipefail
 source "config.ci"
+BASE=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
-printf -- "PLATFORMS: %s\n" "${PLATFORMS}"
+export PATH="${BASE}/ci:${PATH}"
+
 printf -- "BUILDS:\n"
 for version in ${PHP_UPSTREAM}
 do
@@ -11,7 +14,7 @@ done
 
 for version in ${PHP_UPSTREAM}
 do
-  if pv=$(ci/get-php-version "${version}")
+  if pv=$(get-php-version "${version}")
   then
     if [[ ${pv} =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
     then
@@ -20,7 +23,7 @@ do
       flavor="${version#*-}"
       shadow-text 0 "${flavor}"
       shadow-text 6 "${pv}"
-      php-builder "${version}" "${flavor}" "${pv}" "${major}" "${minor}"
+      image-builder "${version}" "${flavor}" "${pv}" "${major}" "${minor}"
     else
       printf -- "ERROR: unable parse upstream PHP version ...\n"
       exit 100
