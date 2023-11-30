@@ -35,14 +35,14 @@ stages:
 Build PHP 8.1 Image:
   extends: .ci:image-build
   script:
-    - ci/ci-builder php:8.1-fpm-alpine
+    - ./ci-builder php:8.1-fpm-alpine
 
 Build PHP 8.2 Image:
   extends: .ci:image-build
   script:
-    - ci/ci-builder php:8.2-fpm-alpine
+    - ./ci-builder php:8.2-fpm-alpine
 
 Build PHP 8.3 Image:
   extends: .ci:image-build
   script:
-    - ci/ci-builder php:8.3-fpm-alpine
+    - ./ci-builder php:8.3-fpm-alpine
