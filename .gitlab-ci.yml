@@ -1,6 +1,6 @@
 #::PROJECT:CI:PHP-UPSTREAM
 default:
-  image: ${CI_REGISTRY}/the-platform/container-images/docker-shell:latest
+  image: wyga/docker-shell:latest
   services:
     - docker:dind
   tags:
