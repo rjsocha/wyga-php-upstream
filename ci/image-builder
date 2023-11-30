@@ -10,7 +10,7 @@ VERSION="${3}"
 MAJOR_VERSION="${4}"
 MINOR_VERSION="${5}"
 CONTEXT="context"
-CI_LOGS=".artifacts/log"
+CI_LOG=".artifacts/log"
 
 RELEASE=${MAJOR_VERSION}-${FLAVOUR}
 DOCKERFILE="dockerfile/Dockerfile.${MAJOR_VERSION}-${FLAVOUR}"
@@ -31,7 +31,6 @@ then
   exit 100
 fi
 export PATH="$(pwd)/ci:$(pwd):${PATH}"
-
 
 echo "UPSTREAM:   ${UPSTREAM}"
 echo "FLAVOUR:    ${FLAVOUR}"
@@ -58,14 +57,14 @@ IMAGE=()
 DOCKERIO=()
 TAG=()
 
-for tag in ${UPSTREAM} ${VERSION}-${FLAVOUR}
+for tag in "${MAJOR_VERSION}-${FLAVOUR}" "${VERSION}-${FLAVOUR}"
 do
   IMAGE+=( "${CI_REGISTRY_IMAGE}:${tag}" )
   TAG+=( "-t" "${CI_REGISTRY_IMAGE}:${tag}" )
-  if [[ -n ${DOCKER_IO_USER:-} ]] && [[ -z ${NODOCKERIO:-} ]]
+  if [[ -n ${DOCKER_IO_USER:-} ]] && [[ -n ${DOCKER_IO_PATH:-} ]] && [[ -z ${NODOCKERIO:-} ]]
   then
-    DOCKERIO+=( "${CI_PROJECT_PATH}:${tag}" )
-    TAG+=( "-t" "${CI_PROJECT_PATH}:${tag}" )
+    DOCKERIO+=( "${DOCKER_IO_PATH}/${NAME,,}:${tag}" )
+    TAG+=( "-t" "${DOCKER_IO_PATH}/${NAME,,}:${tag}" )
   fi
 done
 
@@ -74,6 +73,8 @@ for image in ${IMAGE[@]} ${DOCKERIO[@]}
 do
   printf -- " %s\n" "${image}"
 done
+
+[[ -z ${SKIPBUILD:-} ]] || exit 0
 
 ARGS=()
 for arg in ${BUILD_ARGS:-}
@@ -85,12 +86,12 @@ done
 exec 101>&1 102>&2
 if [[ -z ${NOLOG:-} ]]
 then
-  if ! mkdir -p "${CI_LOGS}"
+  if ! mkdir -p "${CI_LOG}"
   then
     printf -- "ERROR: Unable to create LOG directory ...\n"
     exit 100
   fi
-  exec >"${CI_LOGS}/build-${NAME,,}-${VERSION}-${FLAVOUR}.txt" 2>&1
+  exec >"${CI_LOG}/build-${NAME,,}-${VERSION}-${FLAVOUR}.txt" 2>&1
 fi
 
 rc=0

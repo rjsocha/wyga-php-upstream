@@ -1,5 +1,5 @@
 ARG UPSTREAM
-FROM php:${UPSTREAM}
+FROM ${UPSTREAM}
 ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 RUN apk upgrade --no-cache && \
     apk add --no-cache tini && \

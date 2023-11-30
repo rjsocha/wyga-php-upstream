@@ -1,5 +1,11 @@
 export NAME="php-upstream"
-export PHP_UPSTREAM="${UPSTREAMS:-8.3-fpm-alpine 8.2-fpm-alpine 8.1-fpm-alpine}"
+
+PHP=()
+PHP+=( "php:8.3-fpm-alpine" )
+PHP+=( "php:8.2-fpm-alpine" )
+PHP+=( "php:8.1-fpm-alpine" )
+
+export UPSTREAMS="${UPSTREAMS:-${PHP[@]}}"
 export PLATFORMS="${PLATFORMS:-linux/amd64,linux/arm64}"
 
 export BUILD_ARGS="UPSTREAM VERSION"

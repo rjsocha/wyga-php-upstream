@@ -4,26 +4,22 @@ set -o pipefail
 source "config.ci"
 BASE=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
-export PATH="${BASE}/ci:${PATH}"
+export PATH="${BASE}:${BASE}/ci:${PATH}"
 
-printf -- "BUILDS:\n"
-for version in ${PHP_UPSTREAM}
-do
-  printf -- "  %s\n" "${version}"
-done
-
-for version in ${PHP_UPSTREAM}
-do
-  if pv=$(get-php-version "${version}")
+run_build() {
+local upstream="${1}"
+  if local pv=$(get-php-version "${upstream}")
   then
     if [[ ${pv} =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
     then
-      major="${pv%.*}"
-      minor="${pv##*.}"
-      flavor="${version#*-}"
+      local major="${pv%.*}"
+      local minor="${pv##*.}"
+      local version="${upstream#*:}"
+      local flavor="${version#*-}"
+      upstream="${upstream%%:*}"
       shadow-text 0 "${flavor}"
       shadow-text 6 "${pv}"
-      image-builder "${version}" "${flavor}" "${pv}" "${major}" "${minor}"
+      image-builder "${upstream}:${pv}-${flavor}" "${flavor}" "${pv}" "${major}" "${minor}"
     else
       printf -- "ERROR: unable parse upstream PHP version ...\n"
       exit 100
@@ -32,4 +28,19 @@ do
     printf -- "ERROR: unable to get upstream PHP version ...\n"
     exit 200
   fi
-done
+}
+
+if [[ -n ${1:-} ]]
+then
+  run_build "${1}"
+else
+  printf -- "BUILDS:\n"
+  for version in ${UPSTREAMS}
+  do
+    printf -- "  %s\n" "${version}"
+  done
+  for version in ${UPSTREAMS}
+  do
+    run_build "${version}"
+  done
+fi

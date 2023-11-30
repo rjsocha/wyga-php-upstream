@@ -52,7 +52,7 @@ RUN enable-php-extensions xdebug opcache mysqli gd
   - pcntl
   - pdo_mysql
   - pgsql
-  - random (>=8.3)
+  - random (>=8.2)
   - redis
   - sockets
   - xdebug
@@ -83,7 +83,7 @@ See: https://github.com/regclient/regclient
 
 ## Settings
 
-Make sure you set Timeout value to at least 8 hours.
+Make sure you set Timeout value to at least 8 hours. (or add more workers)
 
 ```
 Settings->CI/CD->General pipelines->Timeout

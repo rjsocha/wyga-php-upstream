@@ -1,5 +1,5 @@
 ARG UPSTREAM
-FROM php:${UPSTREAM}
+FROM ${UPSTREAM}
 ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -qq && \
