@@ -15,23 +15,6 @@ CI_LOG=".artifacts/log"
 RELEASE=${MAJOR_VERSION}-${FLAVOUR}
 DOCKERFILE="dockerfile/Dockerfile.${MAJOR_VERSION}-${FLAVOUR}"
 
-# Locate project root directory
-while [[ ! -f .gitlab-ci.yml ]]
-do
-  cd ..
-  if [[ $(pwd) == "/" ]]
-  then
-    printf -- "ERROR: Unable to locate the project's root folder ...\n"
-    exit 100
-  fi
-done
-if ! grep -q "#::PROJECT:CI:${NAME^^}" ".gitlab-ci.yml"
-then
-  printf -- "ERROR: Unable to locate the project's root folder (incorrect .gitlab-ci.yml file) ...\n"
-  exit 100
-fi
-export PATH="$(pwd)/ci:$(pwd):${PATH}"
-
 echo "UPSTREAM:   ${UPSTREAM}"
 echo "FLAVOUR:    ${FLAVOUR}"
 echo "VERSION:    ${VERSION}"
