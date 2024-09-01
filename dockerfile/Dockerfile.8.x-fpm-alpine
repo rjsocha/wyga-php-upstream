@@ -15,7 +15,6 @@ RUN apk upgrade --no-cache && \
       imap \
       intl \
       ldap \
-      mcrypt \
       memcache \
       memcached \
       mongodb  \
