@@ -43,6 +43,7 @@ RUN enable-php-extensions xdebug opcache mysqli gd
   - imap
   - intl
   - ldap
+  - mcrypt (for <=8.2)
   - memcache
   - memcached
   - mongodb

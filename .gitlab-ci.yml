@@ -20,3 +20,8 @@ Build PHP 8.3 Image:
   extends: .ci:image-builder
   script:
     - ci-builder php:8.3-fpm-alpine
+
+Build PHP 8.4 Image:
+  extends: .ci:image-builder
+  script:
+    - ci-builder php:8.4-fpm-alpine

@@ -1,4 +1,4 @@
-ARG UPSTREAM
+ARG UPSTREAM=php:8.4-fpm-alpine
 FROM ${UPSTREAM}
 ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 RUN apk upgrade --no-cache && \
@@ -9,18 +9,20 @@ RUN apk upgrade --no-cache && \
       bz2 \
       calendar \
       exif \
+      ftp \
       gd \
       gettext \
       gmp \
+      imagick \
       imap \
       intl \
       ldap \
       lzf \
-      mcrypt \
       memcache \
       memcached \
       mongodb  \
       mysqli \
+      newrelic \
       pcntl \
       opcache \
       pdo_mysql \
@@ -32,6 +34,7 @@ RUN apk upgrade --no-cache && \
       xdebug \
       yaml \
       xsl \
+      zstd \
       zip  && \
     find /usr/local/etc/php/conf.d -type f -name "*.ini" -not -name "docker-fpm.ini" -not -name "docker-php-ext-sodium.ini" -exec mv {} {}-disabled \;
 COPY --chmod=0755 enable-php-extensions /usr/local/bin/enable-php-extensions
